@@ -72,9 +72,48 @@ public class GraphicEntityFactory {
         }
 
         if(!exists){
-            Sprite sprite = this.atlas.createSprite(name);
-            graphicEntity = new Background(sprite);
-            entities.add(graphicEntity);
+            switch (name) {
+                case Constants.SPRITE_NAME_BACKGROUND:
+                    Sprite spriteBackgroud = this.atlas.createSprite(name);
+                    graphicEntity = new Background(spriteBackgroud);
+                    entities.add(graphicEntity);
+                    break;
+
+                case Constants.SPRITE_NAME_PLANE:
+                    Plane Plane1 = new Plane(
+                        this.atlas, 
+                        Constants.PLANE_COLOR.BLUE, 
+                        1
+                    ); // El enum cambiara dependiendo de lo que elija el jugador en un posible menu
+
+                    Plane Plane2 = new Plane(
+                        this.atlas, 
+                        Constants.PLANE_COLOR.BLUE, 
+                        2
+                    );
+
+                    Plane Plane3 = new Plane(
+                        this.atlas, 
+                        Constants.PLANE_COLOR.BLUE, 
+                        3
+                    );
+
+                    Plane[] arrayGraphicEntityPlanes = new Plane[]{
+                        Plane1,
+                        Plane2,
+                        Plane3
+                    };
+                    
+                    graphicEntity = new Player(arrayGraphicEntityPlanes);
+                    entities.add(graphicEntity);
+                    break;
+            
+                default:
+                    Sprite spriteDefault = this.atlas.createSprite(name);
+                    graphicEntity = new Background(spriteDefault);
+                    entities.add(graphicEntity);
+                    break;
+            }
         }
         return graphicEntity;
     }

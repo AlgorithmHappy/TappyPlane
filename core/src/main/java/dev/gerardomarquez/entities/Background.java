@@ -51,6 +51,6 @@ public class Background implements GraphicEntity {
      */
     @Override
     public Sprite getSprite() {
-        return this.getSprite();
+        return this.sprite;
     }
 }

@@ -71,7 +71,7 @@ public class Constants {
          * Devuelve el numero de fotograma del atlas
          * @return Numero de fotograma de la animacion del avion
          */
-        public Integer getNumero() {
+        public Integer getNumber() {
             return number;
         }
     }
@@ -81,5 +81,7 @@ public class Constants {
      */
     public static final Integer FIRST_INDEX = 0;
     public static final Integer SECOND_INDEX = 1;
+    public static final String PIPE = "|";
 
+    public static final Float FRAME_RATE_ANIMATION_PLAYER = 0.1f;
 }
