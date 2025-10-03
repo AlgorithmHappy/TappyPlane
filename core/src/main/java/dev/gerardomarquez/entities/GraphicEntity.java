@@ -1,6 +1,5 @@
 package dev.gerardomarquez.entities;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /*
@@ -19,10 +18,4 @@ public interface GraphicEntity {
      * @return El nombre de la entidad gráfica.
      */
     public String getName();
-
-    /*
-     * Obtiene el sprite de la entidad gráfica.
-     * @return El sprite de la entidad gráfica.
-     */
-    public Sprite getSprite();
 }

@@ -1,18 +1,15 @@
 package dev.gerardomarquez;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 import dev.gerardomarquez.entities.Background;
-import dev.gerardomarquez.entities.GraphicEntity;
 import dev.gerardomarquez.entities.GraphicEntityFactory;
+import dev.gerardomarquez.entities.GroundMapp;
 import dev.gerardomarquez.entities.Player;
 import dev.gerardomarquez.utils.Constants;
 
@@ -23,15 +20,21 @@ public class Main extends ApplicationAdapter {
     private GraphicEntityFactory graphicEntityFactory;
     private Background background;
     private Player player;
-
-    float stateTime = 0f;
-    float frameDuration = 0.1f;
+    private GroundMapp groundMapp;
+    private OrthographicCamera camera;
+    private Viewport viewport;
 
     @Override
     public void create() {
+        camera = new OrthographicCamera();
+        viewport = new FitViewport(Constants.VIRTUAL_WIDTH, Constants.VIRTUAL_HEIGHT, camera);
+        camera.position.set(Constants.VIRTUAL_WIDTH / 2f, Constants.VIRTUAL_HEIGHT / 2f, 0);
+        camera.update();
+
         this.graphicEntityFactory = GraphicEntityFactory.getInstance();
         this.background = (Background) graphicEntityFactory.createGraphicEntity(Constants.SPRITE_NAME_BACKGROUND);
         this.player = (Player) graphicEntityFactory.createGraphicEntity(Constants.SPRITE_NAME_PLANE);
+        this.groundMapp = (GroundMapp) graphicEntityFactory.createGraphicEntity(Constants.SPRITE_NAME_GROUND);
         batch = graphicEntityFactory.getSpriteBatch();
     }
 
@@ -39,14 +42,24 @@ public class Main extends ApplicationAdapter {
     public void render() {
 
         ScreenUtils.clear(0, 0, 0, 1f);
+        batch.setProjectionMatrix(camera.combined);
+
         batch.begin();
+        
         background.draw(batch);
+        groundMapp.draw(batch);
         player.draw(batch);
+        
         batch.end();
     }
 
     @Override
     public void dispose() {
         batch.dispose();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height);
     }
 }

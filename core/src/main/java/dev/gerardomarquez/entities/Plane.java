@@ -53,14 +53,6 @@ public class Plane implements GraphicEntity {
     }
 
     /*
-     * {@inheritDoc}
-     */
-    @Override
-    public Sprite getSprite() {
-        return this.sprite;
-    }
-
-    /*
      * Aplicar la gravedad cada tiempo "delta"
      * @param y Posicion en el eje de la y al que se tendria que mover abajo cada tiempo "delta"
      * @param rotation Rotacion que tendria que tener el avion para que haga el efecto de caer en picada

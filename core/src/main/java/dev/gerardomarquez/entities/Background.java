@@ -45,12 +45,4 @@ public class Background implements GraphicEntity {
     public String getName() {
         return this.name;
     }
-
-    /*
-     * {@inheritDoc}
-     */
-    @Override
-    public Sprite getSprite() {
-        return this.sprite;
-    }
 }

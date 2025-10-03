@@ -3,9 +3,7 @@ package dev.gerardomarquez.entities;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.utils.Array;
 
 import dev.gerardomarquez.utils.Constants;
 
@@ -15,7 +13,7 @@ import dev.gerardomarquez.utils.Constants;
 public class Player implements GraphicEntity {
 
     /*
-     * Nombre del jugado, usado para identificar el sprite que usuara el jugador.
+     * Nombre del jugador, usado para identificar el sprite que usuara el jugador.
      */
     private String name;
 
@@ -65,6 +63,21 @@ public class Player implements GraphicEntity {
     private Float maxLiftSpeed;
 
     /*
+     * Grado maximo de rotacion del avion
+     */
+    private Float maxGradeRotation;
+
+    /*
+     * Grado minimo de rotacion del avion
+     */
+    private Float minGradeRotation;
+
+    /*
+     * Parar la animacion mientras no se este elevando, para que de el efecto de que sus elices no giran
+     */
+    private Boolean animationPause;
+
+    /*
      * Constructor que indica que frames se van usar para los sprites que utilizara el
      * jugador
      * @param frames Array de frames de la animacion
@@ -74,14 +87,17 @@ public class Player implements GraphicEntity {
             this.name += entity.getName() + Constants.PIPE;
         }
         
-        this.frameDuration = Constants.FRAME_RATE_ANIMATION_PLAYER;
+        this.frameDuration = Constants.PLANE_FRAME_RATE_ANIMATION_PLAYER;
         this.animation = new Animation<>(frameDuration, frames);
-        this.stateTime = 0f;
-        this.velocity = 0f;
-        this.gravity = -45f;
-        this.gradeRotation = 2f;
-        this.liftPower = 180f;
-        this.maxLiftSpeed = 40f;
+        this.stateTime = Constants.ZERO;
+        this.velocity = Constants.ZERO;
+        this.gravity = Constants.GRAVITY;
+        this.gradeRotation = Constants.PLANE_GRADE_ROTATION;
+        this.liftPower = Constants.PLANE_LIFT_POWER;
+        this.maxLiftSpeed = Constants.PLANE_MAX_LIFT_SPEED;
+        this.maxGradeRotation = Constants.PLANE_MAX_ROTATION;
+        this.minGradeRotation = Constants.PLANE_MIN_ROTATION;
+        this.animationPause = Boolean.FALSE;
     }
 
     /*
@@ -90,7 +106,8 @@ public class Player implements GraphicEntity {
     @Override
     public void draw(SpriteBatch spriteBatch) {
         Float delta = Gdx.graphics.getDeltaTime();
-        this.stateTime += delta;
+        if(!this.animationPause)
+            this.stateTime += delta;
         currentPlane = animation.getKeyFrame(stateTime, Boolean.TRUE);
         gameplay(delta);
         applyGravity(delta);
@@ -106,32 +123,33 @@ public class Player implements GraphicEntity {
     }
 
     /*
-    * {@inheritDoc}
-    */
-    @Override
-    public Sprite getSprite() {
-        return this.currentPlane.getSprite();
-    }
-
-    /*
      * Metodo para aplicar gravedad para que el jugador se vaya callendo
      * @param delta Tiempo transcurrido entre cada frame para ver cuanto se tendra que mover
      * el sprite o grafico
      */
     private void applyGravity(Float delta) {
         this.velocity += delta * gravity;
-        Float rotation = Math.min(Math.max(velocity * this.gradeRotation, -45), 45);
+        Float rotation = Math.min(Math.max(velocity * this.gradeRotation, this.minGradeRotation), this.maxGradeRotation);
         for(Plane plane : this.animation.getKeyFrames() ){
             plane.applyGravity(this.velocity, rotation);
         }
     }
 
+    /*
+     * Mecanicas del juego, lo que hace es elevar el avion con proporcion al tiempo en el que se mantiene
+     * presionado el click o el tap en celular
+     * @param delta Tiempo transcurrido entre cada frame para ver cuanto se tendra que mover
+     * el sprite o grafico
+     */
     private void gameplay(Float delta){
-        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) ){
+        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) || Gdx.input.isTouched() ){
             velocity += liftPower * delta;
             if(velocity > maxLiftSpeed){
                 velocity = maxLiftSpeed;
             }
+            animationPause = Boolean.FALSE;
+        } else {
+            animationPause = Boolean.TRUE;
         }
     }
 }

@@ -107,6 +107,11 @@ public class GraphicEntityFactory {
                     graphicEntity = new Player(arrayGraphicEntityPlanes);
                     entities.add(graphicEntity);
                     break;
+
+                case Constants.SPRITE_NAME_GROUND:
+                    graphicEntity = new GroundMapp(atlas, Constants.GROUND_KIND.DIRT, Constants.GROUND_KIND.DIRT);
+                    entities.add(graphicEntity);
+                    break;
             
                 default:
                     Sprite spriteDefault = this.atlas.createSprite(name);
