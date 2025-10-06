@@ -1,8 +1,11 @@
 package dev.gerardomarquez;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -23,6 +26,7 @@ public class Main extends ApplicationAdapter {
     private GroundMapp groundMapp;
     private OrthographicCamera camera;
     private Viewport viewport;
+    private ShapeRenderer shapeRenderer;
 
     @Override
     public void create() {
@@ -35,7 +39,8 @@ public class Main extends ApplicationAdapter {
         this.background = (Background) graphicEntityFactory.createGraphicEntity(Constants.SPRITE_NAME_BACKGROUND);
         this.player = (Player) graphicEntityFactory.createGraphicEntity(Constants.SPRITE_NAME_PLANE);
         this.groundMapp = (GroundMapp) graphicEntityFactory.createGraphicEntity(Constants.SPRITE_NAME_GROUND);
-        batch = graphicEntityFactory.getSpriteBatch();
+        this.batch = graphicEntityFactory.getSpriteBatch();
+        this.shapeRenderer = new ShapeRenderer();
     }
 
     @Override
@@ -43,6 +48,7 @@ public class Main extends ApplicationAdapter {
 
         ScreenUtils.clear(0, 0, 0, 1f);
         batch.setProjectionMatrix(camera.combined);
+        shapeRenderer.setProjectionMatrix(camera.combined);
 
         batch.begin();
         
@@ -51,6 +57,19 @@ public class Main extends ApplicationAdapter {
         player.draw(batch);
         
         batch.end();
+
+        this.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);        
+
+        shapeRenderer.setColor(Color.RED);
+
+        for(Polygon polygon: player.getPolygons() ){
+            this.shapeRenderer.polygon(polygon.getTransformedVertices() );
+            System.out.print(polygon.getX() + "-" + polygon.getY() );
+            System.out.println();
+            System.out.println(player.getX() + "," + player.getY() );
+        }
+
+        this.shapeRenderer.end();
     }
 
     @Override

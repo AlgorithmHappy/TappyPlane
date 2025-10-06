@@ -1,7 +1,15 @@
 package dev.gerardomarquez.entities;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.XmlReader;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Shape2D;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -85,25 +93,28 @@ public class GraphicEntityFactory {
                         Constants.PLANE_COLOR.BLUE, 
                         1
                     ); // El enum cambiara dependiendo de lo que elija el jugador en un posible menu
+                    Plane1.setCollisionShape(this.getShapeBySpriteName(name + Constants.PLANE_COLOR.BLUE.getValue() ) );
 
                     Plane Plane2 = new Plane(
                         this.atlas, 
                         Constants.PLANE_COLOR.BLUE, 
                         2
                     );
+                    Plane2.setCollisionShape(this.getShapeBySpriteName(name + Constants.PLANE_COLOR.BLUE.getValue() ) );
 
                     Plane Plane3 = new Plane(
                         this.atlas, 
                         Constants.PLANE_COLOR.BLUE, 
                         3
                     );
+                    Plane3.setCollisionShape(this.getShapeBySpriteName(name + Constants.PLANE_COLOR.BLUE.getValue() ) );
 
                     Plane[] arrayGraphicEntityPlanes = new Plane[]{
                         Plane1,
                         Plane2,
                         Plane3
                     };
-                    
+
                     graphicEntity = new Player(arrayGraphicEntityPlanes);
                     entities.add(graphicEntity);
                     break;
@@ -129,5 +140,43 @@ public class GraphicEntityFactory {
      */
     public SpriteBatch getSpriteBatch() {
         return this.spriteBatch;
+    }
+
+    public List<Shape2D> getShapeBySpriteName(String name){
+        List<Shape2D> polygonsOrCircles = new ArrayList<>();
+        try {
+            XmlReader reader = new XmlReader();
+            XmlReader.Element root = reader.parse(Gdx.files.internal(Constants.PATH_COLLISIONS) );
+
+            for (XmlReader.Element bodyElem : root.getChildrenByName(Constants.COLLISION_TAG_BODY) ) {
+                String bodyName = bodyElem.getAttribute(Constants.COLLISION_ATRIBUTE_NAME);
+                if(bodyName.equals(name) ){
+                    for (XmlReader.Element polyElem : bodyElem.getChildrenByName(Constants.COLLISION_TAG_POLYGON) ) {
+                        String verticesStr = polyElem.getText().trim();
+                        String[] coords = verticesStr.split(Constants.COLLISION_POINTS_SEPARATION);
+                        float[] vertices = new float[coords.length];
+                        for (int i = 0; i < coords.length; i++) {
+                            vertices[i] = Float.parseFloat(coords[i].trim() );
+                        }
+                        polygonsOrCircles.add(new Polygon(vertices) );
+                    }
+
+                    for (XmlReader.Element circleElem : bodyElem.getChildrenByName(Constants.COLLISION_TAG_CIRCLE) ) {
+                        Float x = circleElem.getFloat(Constants.COLLISION_CIRCLE_X);
+                        Float y = circleElem.getFloat(Constants.COLLISION_CIRCLE_Y);
+                        Float r = circleElem.getFloat(Constants.COLLISION_CIRCLE_RADIO);
+                        polygonsOrCircles.add(new Circle(x, y, r));
+                    }
+                }
+                
+
+
+                // cuerpos.put(bodyName, data);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return polygonsOrCircles;
     }
 }

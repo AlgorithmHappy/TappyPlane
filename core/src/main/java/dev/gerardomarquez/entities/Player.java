@@ -1,9 +1,12 @@
 package dev.gerardomarquez.entities;
 
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Polygon;
 
 import dev.gerardomarquez.utils.Constants;
 
@@ -151,5 +154,17 @@ public class Player implements GraphicEntity {
         } else {
             animationPause = Boolean.TRUE;
         }
+    }
+
+    public List<Polygon> getPolygons(){
+        return this.currentPlane.getPoliPolygons();
+    }
+
+    public Float getX(){
+        return this.currentPlane.getX();
+    }
+
+    public Float getY(){
+        return this.currentPlane.getY();
     }
 }

@@ -5,6 +5,7 @@ package dev.gerardomarquez.utils;
  */
 public class Constants {
     public static final String PATH_ATLAS = "sheet.atlas";
+    public static final String PATH_COLLISIONS = "collisions.xml";
 
     /*
      * Game World vars
@@ -18,6 +19,8 @@ public class Constants {
     public static final Float PLANE_MIN_ROTATION = -45f;
     public static final Float PLANE_MAX_ROTATION = 45f;
     public static final Float PLANE_FRAME_RATE_ANIMATION_PLAYER = 0.085f;
+    public static final Float PLANE_OFFSET_Y = 6f;
+    public static final Float PLANE_OFFSET_X = 6f;
 
     public static final Float GROUND_VELOCITY = 200f;
 
@@ -128,4 +131,19 @@ public class Constants {
     public static final Integer SECOND_INDEX = 1;
     public static final String PIPE = "|";
     public static final Float ZERO = 0f;
+    public static final Integer HALF = 2;
+    public static final Integer ONE_SIXTH = 6;
+
+    /*
+     * Collisions XML
+     */
+    public static final String COLLISION_TAG_BODY = "body";
+    public static final String COLLISION_ATRIBUTE_NAME = "name";
+    public static final String COLLISION_TAG_POLYGON = "polygon";
+    public static final String COLLISION_TAG_CIRCLE = "circle";
+    public static final String COLLISION_POINTS_SEPARATION = ",";
+    public static final String COLLISION_CIRCLE_RADIO = "r";
+    public static final String COLLISION_CIRCLE_X = "x";
+    public static final String COLLISION_CIRCLE_Y = "y";
+
 }
