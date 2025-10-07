@@ -156,15 +156,19 @@ public class Player implements GraphicEntity {
         }
     }
 
+    /*
+     * Obtiene los poligonos de las colisiones del avion actual
+     * @return Lista de poligonos que hace la figura del sprite
+     */
     public List<Polygon> getPolygons(){
         return this.currentPlane.getPoliPolygons();
     }
 
-    public Float getX(){
-        return this.currentPlane.getX();
-    }
-
-    public Float getY(){
-        return this.currentPlane.getY();
+    /*
+     * Obtiene el avion actual de la animacion
+     * @return Avion actual de la animacion
+     */
+    public Plane getCurrentPlane(){
+        return this.currentPlane;
     }
 }

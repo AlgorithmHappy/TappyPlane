@@ -58,15 +58,20 @@ public class Main extends ApplicationAdapter {
         
         batch.end();
 
+        if(groundMapp.collision(player) ){
+            System.out.println("Colision");
+        }
+
         this.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);        
 
         shapeRenderer.setColor(Color.RED);
 
         for(Polygon polygon: player.getPolygons() ){
             this.shapeRenderer.polygon(polygon.getTransformedVertices() );
-            System.out.print(polygon.getX() + "-" + polygon.getY() );
-            System.out.println();
-            System.out.println(player.getX() + "," + player.getY() );
+        }
+
+        for(Polygon polygon: this.groundMapp.getPolygons() ){
+            this.shapeRenderer.polygon(polygon.getTransformedVertices() );
         }
 
         this.shapeRenderer.end();

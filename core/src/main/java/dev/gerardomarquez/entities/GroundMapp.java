@@ -1,8 +1,12 @@
 package dev.gerardomarquez.entities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Polygon;
 
 import dev.gerardomarquez.utils.Constants;
 import dev.gerardomarquez.utils.Constants.GROUND_KIND;
@@ -34,15 +38,33 @@ public class GroundMapp implements GraphicEntity{
 
     /*
      * Constructor para inicializar todos los sprites de ground (techos y suelos)
+     * @param graphicEntityFactory Fabrica de graficos para obtener las colisiones.
      * @param textureAtlas atlas para instanciar los sprites.
      * @param kindTopGround tipo de ground del techo.
      * @param kindDownGround tipo de ground del suelo.
      */
-    public GroundMapp(TextureAtlas textureAtlas, GROUND_KIND kindTopGround, GROUND_KIND kindDownGround){
+    public GroundMapp(
+        GraphicEntityFactory graphicEntityFactory,
+        TextureAtlas textureAtlas,
+        GROUND_KIND kindTopGround,
+        GROUND_KIND kindDownGround
+    ){
         this.topGround = new Ground[] {
-            new Ground(textureAtlas, kindDownGround),
-            new Ground(textureAtlas, kindDownGround),
-            new Ground(textureAtlas, kindDownGround)
+            new Ground(
+                graphicEntityFactory.getShapeBySpriteName(Constants.SPRITE_NAME_GROUND + kindTopGround.getValue() ),
+                textureAtlas,
+                kindDownGround
+            ),
+            new Ground(
+                graphicEntityFactory.getShapeBySpriteName(Constants.SPRITE_NAME_GROUND + kindTopGround.getValue() ),
+                textureAtlas,
+                kindDownGround
+            ),
+            new Ground(
+                graphicEntityFactory.getShapeBySpriteName(Constants.SPRITE_NAME_GROUND + kindTopGround.getValue() ),
+                textureAtlas,
+                kindDownGround
+            )
         };
 
         Float position = null;
@@ -53,9 +75,21 @@ public class GroundMapp implements GraphicEntity{
         }
 
         this.downGround = new Ground[] {
-            new Ground(textureAtlas, kindDownGround),
-            new Ground(textureAtlas, kindDownGround),
-            new Ground(textureAtlas, kindDownGround)
+            new Ground(
+                graphicEntityFactory.getShapeBySpriteName(Constants.SPRITE_NAME_GROUND + kindTopGround.getValue() ),
+                textureAtlas,
+                kindDownGround
+            ),
+            new Ground(
+                graphicEntityFactory.getShapeBySpriteName(Constants.SPRITE_NAME_GROUND + kindTopGround.getValue() ),
+                textureAtlas,
+                kindDownGround
+            ),
+            new Ground(
+                graphicEntityFactory.getShapeBySpriteName(Constants.SPRITE_NAME_GROUND + kindTopGround.getValue() ),
+                textureAtlas,
+                kindDownGround
+            )
         };
 
         position = null;
@@ -130,5 +164,31 @@ public class GroundMapp implements GraphicEntity{
             this.downGround[i].moveToLeft(delta * this.velocity);
             this.topGround[i].moveToLeft(delta * this.velocity);
         }
+    }
+
+    public List<Polygon> getPolygons(){
+        List<Polygon> listTopAndDownVisibleGround = new ArrayList<>();
+        for(int i = 0; i < this.topGround.length; i++){
+            if(topGround[i].isVisible() ){
+                listTopAndDownVisibleGround.addAll(topGround[i].getPolygons() );
+            }
+            if(downGround[i].isVisible() ){
+                listTopAndDownVisibleGround.addAll(downGround[i].getPolygons() );
+            }
+        }
+        return listTopAndDownVisibleGround;
+    }
+
+    /*
+     * Devuelve si colisiono con el jugador o no
+     * @return True si colisiono, False no.
+     */
+    public Boolean collision(Player player){
+        for(Ground ground: this.downGround){
+            if(ground.isVisible() && player.getCurrentPlane().collisionGround(ground) ){
+                return Boolean.TRUE;
+            }
+        }
+        return Boolean.FALSE;
     }
 }

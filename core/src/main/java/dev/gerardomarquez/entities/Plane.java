@@ -6,7 +6,7 @@ import java.util.List;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Shape2D;
 
@@ -100,15 +100,27 @@ public class Plane implements GraphicEntity {
         }
     }
 
+    /*
+     * Obtiene los poligonos de las colisiones
+     * @return Lista de poligonos que hace la figura del sprite
+     */
     public List<Polygon> getPoliPolygons(){
         return this.polygonCollision;
     }
 
-    public Float getX(){
-        return this.sprite.getX();
-    }
-
-    public Float getY(){
-        return this.sprite.getY();
+    /*
+     * Metodo que indica si colisiono con el suelo o el techo
+     * @param ground Suelo o techo
+     */
+    public Boolean collisionGround(Ground ground){
+        Boolean intersect = Boolean.FALSE;
+        for(Polygon polygonPlane: this.polygonCollision){
+            for(Polygon polygonGround: ground.getPolygons() ){
+                if(Intersector.overlapConvexPolygons(polygonPlane, polygonGround ) ){
+                    return Boolean.TRUE;
+                }
+            }
+        }
+        return intersect;
     }
 }

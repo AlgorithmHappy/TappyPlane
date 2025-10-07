@@ -84,6 +84,7 @@ public class GraphicEntityFactory {
                 case Constants.SPRITE_NAME_BACKGROUND:
                     Sprite spriteBackgroud = this.atlas.createSprite(name);
                     graphicEntity = new Background(spriteBackgroud);
+                    
                     entities.add(graphicEntity);
                     break;
 
@@ -120,7 +121,12 @@ public class GraphicEntityFactory {
                     break;
 
                 case Constants.SPRITE_NAME_GROUND:
-                    graphicEntity = new GroundMapp(atlas, Constants.GROUND_KIND.DIRT, Constants.GROUND_KIND.DIRT);
+                    graphicEntity = new GroundMapp(
+                        instance,
+                        atlas,
+                        Constants.GROUND_KIND.DIRT,
+                        Constants.GROUND_KIND.DIRT
+                    );
                     entities.add(graphicEntity);
                     break;
             
