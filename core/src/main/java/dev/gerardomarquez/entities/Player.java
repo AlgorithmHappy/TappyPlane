@@ -81,6 +81,11 @@ public class Player implements GraphicEntity {
     private Boolean animationPause;
 
     /*
+     * Variable para detener el movimiento del jugador cuando colisiona con el suelo o el techo
+     */
+    private Boolean stopPlayer;
+
+    /*
      * Constructor que indica que frames se van usar para los sprites que utilizara el
      * jugador
      * @param frames Array de frames de la animacion
@@ -101,6 +106,7 @@ public class Player implements GraphicEntity {
         this.maxGradeRotation = Constants.PLANE_MAX_ROTATION;
         this.minGradeRotation = Constants.PLANE_MIN_ROTATION;
         this.animationPause = Boolean.FALSE;
+        this.stopPlayer = Boolean.FALSE;
     }
 
     /*
@@ -112,8 +118,6 @@ public class Player implements GraphicEntity {
         if(!this.animationPause)
             this.stateTime += delta;
         currentPlane = animation.getKeyFrame(stateTime, Boolean.TRUE);
-        gameplay(delta);
-        applyGravity(delta);
         currentPlane.draw(spriteBatch);
     }
 
@@ -130,7 +134,9 @@ public class Player implements GraphicEntity {
      * @param delta Tiempo transcurrido entre cada frame para ver cuanto se tendra que mover
      * el sprite o grafico
      */
-    private void applyGravity(Float delta) {
+    public void applyGravity(Float delta) {
+        if(this.stopPlayer) return;
+
         this.velocity += delta * gravity;
         Float rotation = Math.min(Math.max(velocity * this.gradeRotation, this.minGradeRotation), this.maxGradeRotation);
         for(Plane plane : this.animation.getKeyFrames() ){
@@ -144,8 +150,8 @@ public class Player implements GraphicEntity {
      * @param delta Tiempo transcurrido entre cada frame para ver cuanto se tendra que mover
      * el sprite o grafico
      */
-    private void gameplay(Float delta){
-        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) || Gdx.input.isTouched() ){
+    public void gameplay(Float delta){
+        if( (Gdx.input.isButtonPressed(Input.Buttons.LEFT) || Gdx.input.isTouched() ) && !this.stopPlayer ){
             velocity += liftPower * delta;
             if(velocity > maxLiftSpeed){
                 velocity = maxLiftSpeed;
@@ -170,5 +176,12 @@ public class Player implements GraphicEntity {
      */
     public Plane getCurrentPlane(){
         return this.currentPlane;
+    }
+
+    /*
+     * Para el movimiento del jugador cuando colisiona con el suelo o el techo
+     */
+    public void stopPlayer(){
+        this.stopPlayer = Boolean.TRUE;
     }
 }

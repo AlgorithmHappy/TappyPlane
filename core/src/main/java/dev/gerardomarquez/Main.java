@@ -1,6 +1,7 @@
 package dev.gerardomarquez;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,7 +13,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import dev.gerardomarquez.entities.Background;
 import dev.gerardomarquez.entities.GraphicEntityFactory;
-import dev.gerardomarquez.entities.GroundMapp;
+import dev.gerardomarquez.entities.GroundAndRockMapp;
 import dev.gerardomarquez.entities.Player;
 import dev.gerardomarquez.utils.Constants;
 
@@ -23,7 +24,7 @@ public class Main extends ApplicationAdapter {
     private GraphicEntityFactory graphicEntityFactory;
     private Background background;
     private Player player;
-    private GroundMapp groundMapp;
+    private GroundAndRockMapp groundMapp;
     private OrthographicCamera camera;
     private Viewport viewport;
     private ShapeRenderer shapeRenderer;
@@ -38,14 +39,14 @@ public class Main extends ApplicationAdapter {
         this.graphicEntityFactory = GraphicEntityFactory.getInstance();
         this.background = (Background) graphicEntityFactory.createGraphicEntity(Constants.SPRITE_NAME_BACKGROUND);
         this.player = (Player) graphicEntityFactory.createGraphicEntity(Constants.SPRITE_NAME_PLANE);
-        this.groundMapp = (GroundMapp) graphicEntityFactory.createGraphicEntity(Constants.SPRITE_NAME_GROUND);
+        this.groundMapp = (GroundAndRockMapp) graphicEntityFactory.createGraphicEntity(Constants.SPRITE_NAME_GROUND);
         this.batch = graphicEntityFactory.getSpriteBatch();
         this.shapeRenderer = new ShapeRenderer();
     }
 
     @Override
     public void render() {
-
+        Float delta = Gdx.graphics.getDeltaTime();
         ScreenUtils.clear(0, 0, 0, 1f);
         batch.setProjectionMatrix(camera.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
@@ -58,10 +59,18 @@ public class Main extends ApplicationAdapter {
         
         batch.end();
 
+        player.gameplay(delta );
+        player.applyGravity(delta );
+        groundMapp.move(delta);
+        groundMapp.gameplay();
+        groundMapp.triggerRock(delta);
+
         if(groundMapp.collision(player) ){
-            System.out.println("Colision");
+            player.stopPlayer();
         }
 
+
+        /* Pintar colisiones solo prueba */
         this.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);        
 
         shapeRenderer.setColor(Color.RED);
@@ -75,6 +84,8 @@ public class Main extends ApplicationAdapter {
         }
 
         this.shapeRenderer.end();
+
+        /* Fin de pintar colisiones solo prueba */
     }
 
     @Override

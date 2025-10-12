@@ -1,0 +1,174 @@
+{
+    "maxSecond": 10.0,
+    "minSecond": 0.0,
+    "levels": {
+        "easy": {
+            "rockMap": [
+                [
+                    {
+                        "seconds": 1.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 2.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 3.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 4.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 5.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 6.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 7.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 8.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 9.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 10.0,
+                        "kind": "Random",
+                        "isDown": true
+                    }
+                ]
+            ]
+        },
+        "medium": {
+            "rockMap": [
+                [
+                    {
+                        "seconds": 1.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 2.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 3.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 4.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 5.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 6.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 7.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 8.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 9.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 10.0,
+                        "kind": "Random",
+                        "isDown": true
+                    }
+                ]
+            ]
+        },
+        "hard": {
+            "rockMap": [
+                [
+                    {
+                        "seconds": 1.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 2.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 3.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 4.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 5.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 6.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 7.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 8.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 9.0,
+                        "kind": "Random",
+                        "isDown": true
+                    },
+                    {
+                        "seconds": 10.0,
+                        "kind": "Random",
+                        "isDown": true
+                    }
+                ]
+            ]
+        }
+    }
+}

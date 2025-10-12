@@ -3,18 +3,21 @@ package dev.gerardomarquez.entities;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Polygon;
 
+import dev.gerardomarquez.dto.GenerateRocksJson;
+import dev.gerardomarquez.dto.LevelMapJson;
+import dev.gerardomarquez.dto.RockJson;
 import dev.gerardomarquez.utils.Constants;
 import dev.gerardomarquez.utils.Constants.GROUND_KIND;
+import dev.gerardomarquez.utils.Constants.ROCK_KIND;
 
 /*
  * {@inheritDoc}
  */
-public class GroundMapp implements GraphicEntity{
+public class GroundAndRockMapp implements GraphicEntity{
 
     /*
     * Nombre del Ground, usado para identificar el sprite que usuara el ground.
@@ -37,13 +40,28 @@ public class GroundMapp implements GraphicEntity{
     private Float velocity;
 
     /*
+     * Objeto que mapea la estructura del JSON para generar las rocas.
+     */
+    private GenerateRocksJson generateRocksJson;
+
+    /*
+     * Tiempo transcurrido que se resetea cada N segundos para generar las rocas
+     */
+    private Float time;
+
+    /*
+     * Lista de rocas que se generaran en el juego
+     */
+    private List<Rock> listRocks;
+
+    /*
      * Constructor para inicializar todos los sprites de ground (techos y suelos)
      * @param graphicEntityFactory Fabrica de graficos para obtener las colisiones.
      * @param textureAtlas atlas para instanciar los sprites.
      * @param kindTopGround tipo de ground del techo.
      * @param kindDownGround tipo de ground del suelo.
      */
-    public GroundMapp(
+    public GroundAndRockMapp(
         GraphicEntityFactory graphicEntityFactory,
         TextureAtlas textureAtlas,
         GROUND_KIND kindTopGround,
@@ -100,6 +118,9 @@ public class GroundMapp implements GraphicEntity{
 
         this.name = this.topGround[Constants.FIRST_INDEX] + Constants.PIPE + this.downGround[Constants.FIRST_INDEX];
         this.velocity = Constants.GROUND_VELOCITY;
+        this.generateRocksJson = graphicEntityFactory.getGenerateRocksJson();
+        this.time = Constants.ZERO;
+        this.listRocks = new ArrayList<>();
     }
 
     /*
@@ -107,7 +128,6 @@ public class GroundMapp implements GraphicEntity{
     */
     @Override
     public void draw(SpriteBatch spriteBatch) {
-        this.gameplay();
         for(Ground ground: this.topGround){
             if(ground.isVisible() ){
                 ground.draw(spriteBatch);
@@ -116,6 +136,12 @@ public class GroundMapp implements GraphicEntity{
         for(Ground ground: this.downGround){
             if(ground.isVisible() ){
                 ground.draw(spriteBatch);
+            }
+        }
+        for(Rock rock: this.listRocks){
+            if(this.time >= rock.getSecond() ){
+                rock.isVisible(Boolean.TRUE);
+                rock.draw(spriteBatch);
             }
         }
     }
@@ -131,8 +157,7 @@ public class GroundMapp implements GraphicEntity{
     /*
      * Logica que contendra el ground
      */
-    private void gameplay() {
-        this.move();
+    public void gameplay() {
         for(int i = 0; i < this.topGround.length; i++){
             if(topGround[i].isOutOfScreenLeft() ){
                 Float maxPositionX = Constants.ZERO;
@@ -153,16 +178,25 @@ public class GroundMapp implements GraphicEntity{
                 downGround[i].moveToNextRightGround(maxPositionX);
             }
         }
+
+        for(Rock rock: this.listRocks){
+            if(rock.isOutOfScreenLeft() ){
+                this.listRocks.remove(rock);
+            }
+        }
     }
 
     /*
      * Movimiento constante a la izquierda
      */
-    private void move(){
-        Float delta = Gdx.graphics.getDeltaTime();
+    public void move(Float delta){
         for(int i = 0; i < this.downGround.length; i++){
             this.downGround[i].moveToLeft(delta * this.velocity);
             this.topGround[i].moveToLeft(delta * this.velocity);
+        }
+
+        for(Rock rock: this.listRocks){
+            rock.moveToLeft(delta * this.velocity);
         }
     }
 
@@ -184,11 +218,49 @@ public class GroundMapp implements GraphicEntity{
      * @return True si colisiono, False no.
      */
     public Boolean collision(Player player){
-        for(Ground ground: this.downGround){
-            if(ground.isVisible() && player.getCurrentPlane().collisionGround(ground) ){
+        for(int i = 0; i < this.downGround.length; i++){
+            if( this.downGround[i].isVisible() && player.getCurrentPlane().collisionGround(this.downGround[i] ) ){
+                return Boolean.TRUE;
+            }
+            if( this.topGround[i].isVisible() && player.getCurrentPlane().collisionGround(this.topGround[i] ) ){
+                return Boolean.TRUE;
+            }
+        }
+        for(Rock rock: this.listRocks){
+            if(rock.isVisible() && player.getCurrentPlane().collisionRock(rock) ){
                 return Boolean.TRUE;
             }
         }
         return Boolean.FALSE;
+    }
+
+    public void triggerRock(Float delta){
+        if(this.velocity == Constants.GROUND_VELOCITY){
+            LevelMapJson levelMapJson = this.generateRocksJson.getLevels().getEasy();
+            Integer maxIndex = levelMapJson.getRockMap().size();
+            Integer random = (int)(Math.random() * maxIndex);
+
+            List<RockJson> rocksJsons = levelMapJson.getRockMap().get(random);
+
+            for(RockJson rockJson: rocksJsons ){
+                this.listRocks.add(
+                    new Rock(
+                        ROCK_KIND.valueOf(rockJson.getKind() ),
+                        rockJson.getIsDown(),
+                        rockJson.getSeconds()
+                    )
+                );
+            }
+        } else if (this.velocity > Constants.GROUND_VELOCITY + 1){
+
+        } else if (this.velocity < Constants.GROUND_VELOCITY + 2){
+
+        }
+
+        if(this.time >= this.generateRocksJson.getMaxSecond() ){
+            this.listRocks.clear();
+            this.time = Constants.ZERO;
+        }
+        this.time += delta;
     }
 }

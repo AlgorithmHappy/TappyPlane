@@ -6,6 +6,7 @@ package dev.gerardomarquez.utils;
 public class Constants {
     public static final String PATH_ATLAS = "sheet.atlas";
     public static final String PATH_COLLISIONS = "collisions.xml";
+    public static final String PATH_GENERATE_ROCKS_JSON = "generateRocks.json";
 
     /*
      * Game World vars
@@ -30,6 +31,7 @@ public class Constants {
     public static final String SPRITE_NAME_BACKGROUND = "background";
     public static final String SPRITE_NAME_PLANE = "plane";
     public static final String SPRITE_NAME_GROUND = "ground";
+    public static final String SPRITE_NAME_ROCK = "rock";
 
     /*
      * Colores del avion
@@ -92,9 +94,9 @@ public class Constants {
         }
     }
 
-     /*
-     * Tipos de piso y techo
-     */
+    /*
+    * Tipos de piso y techo
+    */
     public enum GROUND_KIND {
         DIRT("Dirt"),
         GRASS("Grass"),
@@ -125,6 +127,37 @@ public class Constants {
     }
 
     /*
+    * Tipos de roca
+    */
+    public enum ROCK_KIND {
+        GRASS("Grass"),
+        ICE("Ice"),
+        SNOW("Snow"),
+        Random("Random");
+
+        /*
+         * Tipo de roca
+         */
+        private final String value;
+
+        /*
+         * Constructor que setea el tipo de roca
+         * @param value Tipo de roca en string
+         */
+        ROCK_KIND(String value) {
+            this.value = value;
+        }
+
+        /*
+         * Getter para obtener el tipo de roca
+         * @return value Devuelve el tipo de roca en string
+         */
+        public String getValue() {
+            return value;
+        }
+    }
+
+    /*
      * Variables globales
      */
     public static final Integer FIRST_INDEX = 0;
@@ -133,6 +166,7 @@ public class Constants {
     public static final Float ZERO = 0f;
     public static final Integer HALF = 2;
     public static final Integer ONE_SIXTH = 6;
+    public static final String DOWN = "Down";
 
     /*
      * Collisions XML

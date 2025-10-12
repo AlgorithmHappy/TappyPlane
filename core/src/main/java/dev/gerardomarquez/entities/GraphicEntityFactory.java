@@ -1,11 +1,13 @@
 package dev.gerardomarquez.entities;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Polygon;
@@ -14,6 +16,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
+import dev.gerardomarquez.dto.GenerateRocksJson;
+import dev.gerardomarquez.dto.LevelMapJson;
+import dev.gerardomarquez.dto.LevelsJson;
+import dev.gerardomarquez.dto.RockJson;
 import dev.gerardomarquez.utils.Constants;
 
 /*
@@ -43,12 +49,39 @@ public class GraphicEntityFactory {
     private Array<GraphicEntity> entities;
 
     /*
+     * Objeto que mapea la estructura del JSON para generar las rocas.
+     */
+    private GenerateRocksJson generateRocksJson;
+
+    /*
      * Constructor privado para evitar instanciación externa.
      */
     private GraphicEntityFactory(){
         this.spriteBatch = new SpriteBatch();
         this.atlas = new TextureAtlas(Gdx.files.internal(Constants.PATH_ATLAS) );
         this.entities = new Array<GraphicEntity>();
+        try {
+            JsonReader reader = new JsonReader();
+            JsonValue root = reader.parse(Gdx.files.internal(Constants.PATH_GENERATE_ROCKS_JSON) );
+            generateRocksJson = new GenerateRocksJson();
+            generateRocksJson.setMinSecond(root.getFloat("minSecond") );
+            generateRocksJson.setMaxSecond(root.getFloat("maxSecond") );
+
+            JsonValue levels = root.get("levels");
+            LevelsJson levelsJson = new LevelsJson();
+            
+            JsonValue easy = levels.get("easy");
+            JsonValue medium = levels.get("medium");
+            JsonValue hard = levels.get("hard");
+
+            String jsonString = Gdx.files.internal(Constants.PATH_GENERATE_ROCKS_JSON).readString();
+            Json json = new Json();
+            json.setElementType(LevelMapJson.class, "rockMap", List.class);
+            json.setElementType(List.class, null, RockJson.class);
+            this.generateRocksJson = json.fromJson(GenerateRocksJson.class, jsonString);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /*
@@ -121,7 +154,7 @@ public class GraphicEntityFactory {
                     break;
 
                 case Constants.SPRITE_NAME_GROUND:
-                    graphicEntity = new GroundMapp(
+                    graphicEntity = new GroundAndRockMapp(
                         instance,
                         atlas,
                         Constants.GROUND_KIND.DIRT,
@@ -184,5 +217,21 @@ public class GraphicEntityFactory {
         }
 
         return polygonsOrCircles;
+    }
+
+    /*
+     * Getter para obtener el objeto que mapea la estructura del JSON para generar las rocas.
+     * @return generateRocksJson Devuelve el objeto que mapea la estructura del JSON para generar las rocas.
+     */
+    public GenerateRocksJson getGenerateRocksJson() {
+        return this.generateRocksJson;
+    }
+
+    /*
+     * Getter para obtener el atlas de texturas que contendrá los sprites.
+     * @return atlas Devuelve el atlas de texturas que contendrá los sprites.
+     */
+    public TextureAtlas getTextureAtlas() {
+        return this.atlas;
     }
 }

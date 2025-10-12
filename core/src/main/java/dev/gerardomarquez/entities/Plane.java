@@ -123,4 +123,20 @@ public class Plane implements GraphicEntity {
         }
         return intersect;
     }
+
+    /*
+     * Metodo que indica si colisiono con el suelo o el techo
+     * @param ground Suelo o techo
+     */
+    public Boolean collisionRock(Rock rock){
+        Boolean intersect = Boolean.FALSE;
+        for(Polygon polygonPlane: this.polygonCollision){
+            for(Polygon polygonRock: rock.getPolygons() ){
+                if(Intersector.overlapConvexPolygons(polygonPlane, polygonRock) ){
+                    return Boolean.TRUE;
+                }
+            }
+        }
+        return intersect;
+    }
 }

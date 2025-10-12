@@ -27,9 +27,9 @@ public class Ground implements GraphicEntity{
      */
     private Sprite sprite;
 
-     /*
-     * Colliosion del sprite
-     */
+    /*
+    * Colliosion del sprite
+    */
     private List<Polygon> polygonCollision;
 
     /*
@@ -119,7 +119,7 @@ public class Ground implements GraphicEntity{
 
     /*
      * Metodo que indica si el ground salio del lado izquierdo de la pantalla
-     * @return boleando que indica con true que si salio
+     * @return boleano que indica con true que si salio
      */
     public Boolean isOutOfScreenLeft() {
         return (this.sprite.getX() + this.sprite.getWidth() ) < Constants.ZERO;
