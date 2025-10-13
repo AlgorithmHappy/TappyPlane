@@ -22,6 +22,10 @@ public class Constants {
     public static final Float PLANE_FRAME_RATE_ANIMATION_PLAYER = 0.085f;
     public static final Float PLANE_OFFSET_Y = 6f;
     public static final Float PLANE_OFFSET_X = 6f;
+    public static final Float ROCK_OFFSET_Y = 5f;
+    public static final Float ROCK_OFFSET_X = 10f;
+    public static final Float GROUND_OFFSET_Y = 0f;
+    public static final Float GROUND_OFFSET_X = 10f;
 
     public static final Float GROUND_VELOCITY = 200f;
 
@@ -133,7 +137,8 @@ public class Constants {
         GRASS("Grass"),
         ICE("Ice"),
         SNOW("Snow"),
-        Random("Random");
+        DIRT("Dirt"),
+        RANDOM("Random");
 
         /*
          * Tipo de roca

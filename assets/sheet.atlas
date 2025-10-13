@@ -433,14 +433,14 @@ puffSmall
   orig: 25, 21
   offset: 0, 0
   index: -1
-rock
+rockDirt
   rotate: false
   xy: 114, 1400
   size: 108, 239
   orig: 108, 239
   offset: 0, 0
   index: -1
-rockDown
+rockDirtDown
   rotate: false
   xy: 324, 1489
   size: 108, 239

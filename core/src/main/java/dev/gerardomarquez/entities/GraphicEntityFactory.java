@@ -61,11 +61,12 @@ public class GraphicEntityFactory {
         this.atlas = new TextureAtlas(Gdx.files.internal(Constants.PATH_ATLAS) );
         this.entities = new Array<GraphicEntity>();
         try {
+            Json json = new Json();
             JsonReader reader = new JsonReader();
             JsonValue root = reader.parse(Gdx.files.internal(Constants.PATH_GENERATE_ROCKS_JSON) );
-            generateRocksJson = new GenerateRocksJson();
-            generateRocksJson.setMinSecond(root.getFloat("minSecond") );
-            generateRocksJson.setMaxSecond(root.getFloat("maxSecond") );
+            this.generateRocksJson = new GenerateRocksJson();
+            this.generateRocksJson.setMinSecond(root.getFloat("minSecond") );
+            this.generateRocksJson.setMaxSecond(root.getFloat("maxSecond") );
 
             JsonValue levels = root.get("levels");
             LevelsJson levelsJson = new LevelsJson();
@@ -74,11 +75,61 @@ public class GraphicEntityFactory {
             JsonValue medium = levels.get("medium");
             JsonValue hard = levels.get("hard");
 
-            String jsonString = Gdx.files.internal(Constants.PATH_GENERATE_ROCKS_JSON).readString();
-            Json json = new Json();
-            json.setElementType(LevelMapJson.class, "rockMap", List.class);
-            json.setElementType(List.class, null, RockJson.class);
-            this.generateRocksJson = json.fromJson(GenerateRocksJson.class, jsonString);
+            JsonValue rockMapArrayEasy = easy.get("rockMap");
+            JsonValue rockMapArrayMedium = medium.get("rockMap");
+            JsonValue rockMapArrayHard = hard.get("rockMap");
+
+            List<List<RockJson>> groupedRocksEasy = new ArrayList<>();
+            List<List<RockJson>> groupedRocksMedium = new ArrayList<>();
+            List<List<RockJson>> groupedRocksHard = new ArrayList<>();
+
+            for (JsonValue groupArray : rockMapArrayEasy) {
+                List<RockJson> rockList = new ArrayList<>();
+
+                for (JsonValue rockJsonValue : groupArray) {
+                    RockJson rock = json.readValue(RockJson.class, rockJsonValue);
+                    rockList.add(rock);
+                }
+
+                groupedRocksEasy.add(rockList);
+            }
+
+            for (JsonValue groupArray : rockMapArrayMedium) {
+                List<RockJson> rockList = new ArrayList<>();
+
+                for (JsonValue rockJsonValue : groupArray) {
+                    RockJson rock = json.readValue(RockJson.class, rockJsonValue);
+                    rockList.add(rock);
+                }
+
+                groupedRocksMedium.add(rockList);
+            }
+            
+            for (JsonValue groupArray : rockMapArrayHard) {
+                List<RockJson> rockList = new ArrayList<>();
+
+                for (JsonValue rockJsonValue : groupArray) {
+                    RockJson rock = json.readValue(RockJson.class, rockJsonValue);
+                    rockList.add(rock);
+                }
+
+                groupedRocksHard.add(rockList);
+            }
+
+            LevelMapJson levelMapJsonEasy = new LevelMapJson();
+            levelMapJsonEasy.setRockMap(groupedRocksEasy);
+            
+            LevelMapJson levelMapJsonMedium = new LevelMapJson();
+            levelMapJsonMedium.setRockMap(groupedRocksMedium);
+
+            LevelMapJson levelMapJsonHard = new LevelMapJson();
+            levelMapJsonHard.setRockMap(groupedRocksHard);
+
+            levelsJson.setEasy(levelMapJsonEasy);
+            levelsJson.setMedium(levelMapJsonMedium);
+            levelsJson.setHard(levelMapJsonHard);
+
+            this.generateRocksJson.setLevels(levelsJson);
         } catch (Exception e) {
             e.printStackTrace();
         }

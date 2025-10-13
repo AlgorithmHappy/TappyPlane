@@ -43,6 +43,8 @@ public class Ground implements GraphicEntity{
         this.sprite.setY(Constants.ZERO);
         this.polygonCollision = new ArrayList<>();
         for(Shape2D shape2d: polygonCollision){
+            Polygon polygon = (Polygon)shape2d;
+            polygon.setPosition(this.sprite.getX() + Constants.GROUND_OFFSET_X, this.sprite.getY() + Constants.GROUND_OFFSET_Y);
             this.polygonCollision.add( (Polygon)shape2d );
         }
     }
@@ -104,7 +106,7 @@ public class Ground implements GraphicEntity{
         if(positionX != null){
             this.sprite.setX(positionX + this.sprite.getWidth() );
             this.polygonCollision.forEach(
-                it -> it.setPosition(positionX + this.sprite.getWidth(), it.getY() )
+                it -> it.setPosition(positionX + this.sprite.getWidth() + Constants.GROUND_OFFSET_X, it.getY() + Constants.GROUND_OFFSET_Y)
             );
         }
     }

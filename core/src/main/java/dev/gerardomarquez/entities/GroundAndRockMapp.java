@@ -128,6 +128,12 @@ public class GroundAndRockMapp implements GraphicEntity{
     */
     @Override
     public void draw(SpriteBatch spriteBatch) {
+        for(Rock rock: this.listRocks){
+            if(this.time >= rock.getSecond() ){
+                rock.isVisible(Boolean.TRUE);
+                rock.draw(spriteBatch);
+            }
+        }
         for(Ground ground: this.topGround){
             if(ground.isVisible() ){
                 ground.draw(spriteBatch);
@@ -136,12 +142,6 @@ public class GroundAndRockMapp implements GraphicEntity{
         for(Ground ground: this.downGround){
             if(ground.isVisible() ){
                 ground.draw(spriteBatch);
-            }
-        }
-        for(Rock rock: this.listRocks){
-            if(this.time >= rock.getSecond() ){
-                rock.isVisible(Boolean.TRUE);
-                rock.draw(spriteBatch);
             }
         }
     }
@@ -179,11 +179,13 @@ public class GroundAndRockMapp implements GraphicEntity{
             }
         }
 
+        List<Rock> rocksToRemove = new ArrayList<>();
         for(Rock rock: this.listRocks){
             if(rock.isOutOfScreenLeft() ){
-                this.listRocks.remove(rock);
+                rocksToRemove.add(rock);
             }
         }
+        this.listRocks.removeAll(rocksToRemove);
     }
 
     /*
@@ -196,7 +198,8 @@ public class GroundAndRockMapp implements GraphicEntity{
         }
 
         for(Rock rock: this.listRocks){
-            rock.moveToLeft(delta * this.velocity);
+            if(rock.isVisible() )
+                rock.moveToLeft(delta * this.velocity);
         }
     }
 
@@ -209,6 +212,10 @@ public class GroundAndRockMapp implements GraphicEntity{
             if(downGround[i].isVisible() ){
                 listTopAndDownVisibleGround.addAll(downGround[i].getPolygons() );
             }
+        }
+        for(Rock rock: this.listRocks){
+            if(rock.isVisible() )
+                listTopAndDownVisibleGround.addAll(rock.getPolygons() );
         }
         return listTopAndDownVisibleGround;
     }
@@ -235,7 +242,8 @@ public class GroundAndRockMapp implements GraphicEntity{
     }
 
     public void triggerRock(Float delta){
-        if(this.velocity == Constants.GROUND_VELOCITY){
+        if(this.velocity == Constants.GROUND_VELOCITY && this.listRocks.isEmpty() ){
+            this.time = Constants.ZERO;
             LevelMapJson levelMapJson = this.generateRocksJson.getLevels().getEasy();
             Integer maxIndex = levelMapJson.getRockMap().size();
             Integer random = (int)(Math.random() * maxIndex);
@@ -251,15 +259,14 @@ public class GroundAndRockMapp implements GraphicEntity{
                     )
                 );
             }
-        } else if (this.velocity > Constants.GROUND_VELOCITY + 1){
+        } else if (this.velocity > Constants.GROUND_VELOCITY + 1 && this.listRocks.isEmpty() ){ // Cambiar el +1
 
-        } else if (this.velocity < Constants.GROUND_VELOCITY + 2){
+        } else if (this.velocity < Constants.GROUND_VELOCITY + 2 && this.listRocks.isEmpty() ){ // Cambiar el +2
 
         }
 
         if(this.time >= this.generateRocksJson.getMaxSecond() ){
-            this.listRocks.clear();
-            this.time = Constants.ZERO;
+            this.time = this.generateRocksJson.getMaxSecond();
         }
         this.time += delta;
     }

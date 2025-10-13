@@ -1,5 +1,6 @@
 package dev.gerardomarquez.entities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -47,7 +48,7 @@ public class Rock implements GraphicEntity{
      * @param second Segundo en el que se generara la roca
      */
     public Rock(ROCK_KIND rockKind, Boolean isDownRock, Float second){
-        if(rockKind.getValue().equals(ROCK_KIND.Random.getValue() ) ){
+        if(rockKind.getValue().equals(ROCK_KIND.RANDOM.getValue() ) ){
             int random = (int)(Math.random() * 3);
             switch(random){
                 case 0:
@@ -63,8 +64,13 @@ public class Rock implements GraphicEntity{
         }
         this.name = Constants.SPRITE_NAME_ROCK + rockKind.getValue() + (isDownRock ? Constants.DOWN : new String() );
         this.sprite = GraphicEntityFactory.getInstance().getTextureAtlas().createSprite(this.name);
+        this.sprite.setX(Constants.VIRTUAL_WIDTH);
+        this.sprite.setY(isDownRock ? Constants.VIRTUAL_HEIGHT - this.sprite.getHeight() : this.sprite.getY() );
+        this.listPolygonCollisions = new ArrayList<>();
         for(Shape2D shape2d: GraphicEntityFactory.getInstance().getShapeBySpriteName(this.name) ){
-            this.listPolygonCollisions.add( (Polygon)shape2d );
+            Polygon polygon =(Polygon)shape2d;
+            polygon.setPosition(this.sprite.getX() + Constants.ROCK_OFFSET_X, this.sprite.getY() + Constants.ROCK_OFFSET_Y);
+            this.listPolygonCollisions.add(polygon);
         }
         this.isVisible = Boolean.FALSE;
         this.second = second;
@@ -94,7 +100,7 @@ public class Rock implements GraphicEntity{
     public void moveToLeft(Float add){
         this.sprite.setX(this.sprite.getX() - add);
         for(Polygon polygon: this.listPolygonCollisions){
-            polygon.setPosition(this.sprite.getX(), this.sprite.getY() );
+            polygon.setPosition(this.sprite.getX() + Constants.ROCK_OFFSET_X, this.sprite.getY() + Constants.ROCK_OFFSET_Y);
         }
     }
 

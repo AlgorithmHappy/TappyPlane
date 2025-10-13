@@ -71,7 +71,7 @@ public class Main extends ApplicationAdapter {
 
 
         /* Pintar colisiones solo prueba */
-        this.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);        
+        /*this.shapeRenderer.begin(ShapeRenderer.ShapeType.Line);        
 
         shapeRenderer.setColor(Color.RED);
 
@@ -83,7 +83,7 @@ public class Main extends ApplicationAdapter {
             this.shapeRenderer.polygon(polygon.getTransformedVertices() );
         }
 
-        this.shapeRenderer.end();
+        this.shapeRenderer.end();*/
 
         /* Fin de pintar colisiones solo prueba */
     }
